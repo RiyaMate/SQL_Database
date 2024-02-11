@@ -1,0 +1,633 @@
+CREATE DATABASE  IF NOT EXISTS `fooddelivery` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `fooddelivery`;
+-- MySQL dump 10.13  Distrib 8.0.34, for Win64 (x86_64)
+--
+-- Host: localhost    Database: fooddelivery
+-- ------------------------------------------------------
+-- Server version	8.0.35
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!50503 SET NAMES utf8 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `address`
+--
+
+DROP TABLE IF EXISTS `address`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `address` (
+  `id` int NOT NULL,
+  `unit_number` varchar(10) DEFAULT NULL,
+  `street_number` varchar(10) DEFAULT NULL,
+  `address_line1` varchar(255) DEFAULT NULL,
+  `address_line2` varchar(255) DEFAULT NULL,
+  `city` varchar(255) DEFAULT NULL,
+  `region` varchar(255) DEFAULT NULL,
+  `postal_code` int DEFAULT NULL,
+  `country_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `country_id` (`country_id`),
+  CONSTRAINT `address_ibfk_1` FOREIGN KEY (`country_id`) REFERENCES `country` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `address`
+--
+
+LOCK TABLES `address` WRITE;
+/*!40000 ALTER TABLE `address` DISABLE KEYS */;
+INSERT INTO `address` VALUES (1,'Unit 1','123','Street A','Apt 1','City1','Region1',12345,1),(2,'Unit 2','456','Street B','Apt 2','City2','Region2',23456,2),(3,'Unit 3','789','Street C','Apt 3','City3','Region3',34567,3),(4,'Unit 4','012','Street D','Apt 4','City4','Region4',45678,4),(5,'Unit 5','345','Street E','Apt 5','City5','Region5',56789,5),(6,'Unit 6','678','Street F','Apt 6','City6','Region6',67890,6),(7,'Unit 7','901','Street G','Apt 7','City7','Region7',78901,7),(8,'Unit 8','234','Street H','Apt 8','City8','Region8',89012,8),(9,'Unit 9','567','Street I','Apt 9','City9','Region9',90123,9),(10,'Unit 10','890','Street J','Apt 10','City10','Region10',1234,10);
+/*!40000 ALTER TABLE `address` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `country`
+--
+
+DROP TABLE IF EXISTS `country`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `country` (
+  `id` int NOT NULL,
+  `country_name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `country`
+--
+
+LOCK TABLES `country` WRITE;
+/*!40000 ALTER TABLE `country` DISABLE KEYS */;
+INSERT INTO `country` VALUES (1,'Country1'),(2,'Country2'),(3,'Country3'),(4,'Country4'),(5,'Country5'),(6,'Country6'),(7,'Country7'),(8,'Country8'),(9,'Country9'),(10,'Country10');
+/*!40000 ALTER TABLE `country` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `customer`
+--
+
+DROP TABLE IF EXISTS `customer`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `customer` (
+  `id` int NOT NULL,
+  `first_name` varchar(255) DEFAULT NULL,
+  `last_name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `customer`
+--
+
+LOCK TABLES `customer` WRITE;
+/*!40000 ALTER TABLE `customer` DISABLE KEYS */;
+INSERT INTO `customer` VALUES (1,'John','Doe'),(2,'Jane','Smith'),(3,'Bob','Johnson'),(4,'Alice','Williams'),(5,'Charlie','Jones'),(6,'Eva','Brown'),(7,'David','Taylor'),(8,'Olivia','Miller'),(9,'Samuel','Wilson'),(10,'Sophia','Davis');
+/*!40000 ALTER TABLE `customer` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `customer_after_insert` AFTER INSERT ON `customer` FOR EACH ROW BEGIN
+    -- Update the timestamp column (assuming you have a 'created_at' column)
+    UPDATE customer
+    SET created_at = NOW()
+    WHERE id = NEW.id;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
+-- Table structure for table `customer_address`
+--
+
+DROP TABLE IF EXISTS `customer_address`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `customer_address` (
+  `id` int NOT NULL,
+  `customer_id` int DEFAULT NULL,
+  `address_id` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `customer_id` (`customer_id`),
+  KEY `address_id` (`address_id`),
+  CONSTRAINT `customer_address_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`),
+  CONSTRAINT `customer_address_ibfk_2` FOREIGN KEY (`address_id`) REFERENCES `address` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `customer_address`
+--
+
+LOCK TABLES `customer_address` WRITE;
+/*!40000 ALTER TABLE `customer_address` DISABLE KEYS */;
+INSERT INTO `customer_address` VALUES (1,1,1),(2,2,2),(3,3,3),(4,4,4),(5,5,5),(6,6,6),(7,7,7),(8,8,8),(9,9,9),(10,10,10);
+/*!40000 ALTER TABLE `customer_address` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Temporary view structure for view `customer_info`
+--
+
+DROP TABLE IF EXISTS `customer_info`;
+/*!50001 DROP VIEW IF EXISTS `customer_info`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `customer_info` AS SELECT 
+ 1 AS `customer_id`,
+ 1 AS `first_name`,
+ 1 AS `last_name`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Temporary view structure for view `customer_order_info`
+--
+
+DROP TABLE IF EXISTS `customer_order_info`;
+/*!50001 DROP VIEW IF EXISTS `customer_order_info`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `customer_order_info` AS SELECT 
+ 1 AS `order_id`,
+ 1 AS `customer_first_name`,
+ 1 AS `customer_last_name`,
+ 1 AS `restaurant_name`,
+ 1 AS `ordered_item`,
+ 1 AS `qty_ordered`,
+ 1 AS `price`,
+ 1 AS `item_total`,
+ 1 AS `total_amount`,
+ 1 AS `order_datetime`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Table structure for table `delivery_driver`
+--
+
+DROP TABLE IF EXISTS `delivery_driver`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `delivery_driver` (
+  `id` int NOT NULL,
+  `first_name` varchar(255) DEFAULT NULL,
+  `last_name` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `delivery_driver`
+--
+
+LOCK TABLES `delivery_driver` WRITE;
+/*!40000 ALTER TABLE `delivery_driver` DISABLE KEYS */;
+INSERT INTO `delivery_driver` VALUES (1,'Driver1','Lastname1'),(2,'Driver2','Lastname2'),(3,'Driver3','Lastname3'),(4,'Driver4','Lastname4'),(5,'Driver5','Lastname5'),(6,'Driver6','Lastname6'),(7,'Driver7','Lastname7'),(8,'Driver8','Lastname8'),(9,'Driver9','Lastname9'),(10,'Driver10','Lastname10');
+/*!40000 ALTER TABLE `delivery_driver` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `food_order`
+--
+
+DROP TABLE IF EXISTS `food_order`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `food_order` (
+  `id` int NOT NULL,
+  `customer_id` int DEFAULT NULL,
+  `restaurant_id` int DEFAULT NULL,
+  `customer_address_id` int DEFAULT NULL,
+  `order_status_id` int DEFAULT NULL,
+  `assigned_driver_id` int DEFAULT NULL,
+  `order_datetime` datetime DEFAULT NULL,
+  `delivery_fee` decimal(10,2) DEFAULT NULL,
+  `total_amount` decimal(10,2) DEFAULT NULL,
+  `requested_delivery_datetime` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `customer_id` (`customer_id`),
+  KEY `restaurant_id` (`restaurant_id`),
+  KEY `customer_address_id` (`customer_address_id`),
+  KEY `order_status_id` (`order_status_id`),
+  KEY `assigned_driver_id` (`assigned_driver_id`),
+  CONSTRAINT `food_order_ibfk_1` FOREIGN KEY (`customer_id`) REFERENCES `customer` (`id`),
+  CONSTRAINT `food_order_ibfk_2` FOREIGN KEY (`restaurant_id`) REFERENCES `restaurant` (`id`),
+  CONSTRAINT `food_order_ibfk_3` FOREIGN KEY (`customer_address_id`) REFERENCES `customer_address` (`id`),
+  CONSTRAINT `food_order_ibfk_4` FOREIGN KEY (`order_status_id`) REFERENCES `order_status` (`id`),
+  CONSTRAINT `food_order_ibfk_5` FOREIGN KEY (`assigned_driver_id`) REFERENCES `delivery_driver` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `food_order`
+--
+
+LOCK TABLES `food_order` WRITE;
+/*!40000 ALTER TABLE `food_order` DISABLE KEYS */;
+INSERT INTO `food_order` VALUES (2,4,4,4,4,4,'2023-01-01 12:00:00',5.00,25.00,'2023-01-01 13:00:00'),(3,2,5,5,5,5,'2023-01-02 12:30:00',6.00,30.00,'2023-01-02 13:30:00'),(4,4,1,1,1,1,'2023-01-01 12:00:00',5.00,25.00,'2023-01-01 13:00:00'),(5,2,2,2,2,2,'2023-01-05 14:00:00',9.00,45.00,'2023-01-05 15:00:00'),(6,5,3,3,3,3,'2023-01-06 14:30:00',10.00,50.00,'2023-01-06 15:30:00');
+/*!40000 ALTER TABLE `food_order` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `menu_item`
+--
+
+DROP TABLE IF EXISTS `menu_item`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `menu_item` (
+  `id` int NOT NULL,
+  `restaurant_id` int DEFAULT NULL,
+  `item_name` varchar(255) DEFAULT NULL,
+  `price` decimal(10,2) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `restaurant_id` (`restaurant_id`),
+  CONSTRAINT `menu_item_ibfk_1` FOREIGN KEY (`restaurant_id`) REFERENCES `restaurant` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `menu_item`
+--
+
+LOCK TABLES `menu_item` WRITE;
+/*!40000 ALTER TABLE `menu_item` DISABLE KEYS */;
+INSERT INTO `menu_item` VALUES (1,1,'Cheeseburger',8.99),(2,1,'Chicken Sandwich',9.99),(3,1,'French Fries',3.99),(4,2,'Margherita Pizza',12.99),(5,2,'Spaghetti Bolognese',10.99),(6,3,'Sushi Roll Combo',18.99),(7,3,'Miso Soup',4.99),(8,4,'Classic Caesar Salad',7.49),(9,4,'Grilled Salmon',15.99),(10,5,'Vegetarian Wrap',9.49);
+/*!40000 ALTER TABLE `menu_item` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `order_menu_item`
+--
+
+DROP TABLE IF EXISTS `order_menu_item`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `order_menu_item` (
+  `id` int NOT NULL,
+  `order_id` int DEFAULT NULL,
+  `menu_item_id` int DEFAULT NULL,
+  `qty_ordered` int DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `order_id` (`order_id`),
+  KEY `menu_item_id` (`menu_item_id`),
+  CONSTRAINT `order_menu_item_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `food_order` (`id`),
+  CONSTRAINT `order_menu_item_ibfk_2` FOREIGN KEY (`menu_item_id`) REFERENCES `menu_item` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `order_menu_item`
+--
+
+LOCK TABLES `order_menu_item` WRITE;
+/*!40000 ALTER TABLE `order_menu_item` DISABLE KEYS */;
+/*!40000 ALTER TABLE `order_menu_item` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `order_status`
+--
+
+DROP TABLE IF EXISTS `order_status`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `order_status` (
+  `id` int NOT NULL,
+  `status_value` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `order_status`
+--
+
+LOCK TABLES `order_status` WRITE;
+/*!40000 ALTER TABLE `order_status` DISABLE KEYS */;
+INSERT INTO `order_status` VALUES (1,'Pending'),(2,'Confirmed'),(3,'In Progress'),(4,'Out for Delivery'),(5,'Delivered');
+/*!40000 ALTER TABLE `order_status` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `restaurant`
+--
+
+DROP TABLE IF EXISTS `restaurant`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `restaurant` (
+  `id` int NOT NULL,
+  `restaurant_name` varchar(255) DEFAULT NULL,
+  `address_id` int DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `address_id` (`address_id`),
+  CONSTRAINT `restaurant_ibfk_1` FOREIGN KEY (`address_id`) REFERENCES `address` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `restaurant`
+--
+
+LOCK TABLES `restaurant` WRITE;
+/*!40000 ALTER TABLE `restaurant` DISABLE KEYS */;
+INSERT INTO `restaurant` VALUES (1,'The Tasty Burger Joint',1,'2023-12-15 12:50:31'),(2,'Pizza Paradise',2,'2023-12-15 12:50:31'),(3,'Sushi Delight',3,'2023-12-15 12:50:31'),(4,'Salad Sensation',4,'2023-12-15 12:50:31'),(5,'Wrap2',5,'2023-12-15 12:50:31');
+/*!40000 ALTER TABLE `restaurant` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `before_insert_restaurant` BEFORE INSERT ON `restaurant` FOR EACH ROW BEGIN
+    -- Check if the address_id exists in the address table
+    IF NOT EXISTS (SELECT 1 FROM address WHERE id = NEW.address_id) THEN
+        SIGNAL SQLSTATE '45000'
+        SET MESSAGE_TEXT = 'Invalid address_id. Cannot insert into restaurant.';
+    END IF;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `restaurant_after_insert` AFTER INSERT ON `restaurant` FOR EACH ROW BEGIN
+    -- Update the timestamp column (assuming you have a 'created_at' column)
+    UPDATE restaurant
+    SET created_at = NOW()
+    WHERE id = NEW.id;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `restaurant_after_insert1` AFTER INSERT ON `restaurant` FOR EACH ROW BEGIN
+    -- Update the timestamp column
+    UPDATE restaurant
+    SET created_at = NOW()
+    WHERE id = NEW.id;
+END */;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
+-- Temporary view structure for view `restaurant_info`
+--
+
+DROP TABLE IF EXISTS `restaurant_info`;
+/*!50001 DROP VIEW IF EXISTS `restaurant_info`*/;
+SET @saved_cs_client     = @@character_set_client;
+/*!50503 SET character_set_client = utf8mb4 */;
+/*!50001 CREATE VIEW `restaurant_info` AS SELECT 
+ 1 AS `restaurant_id`,
+ 1 AS `restaurant_name`,
+ 1 AS `unit_number`,
+ 1 AS `street_number`,
+ 1 AS `address_line1`,
+ 1 AS `address_line2`,
+ 1 AS `city`,
+ 1 AS `region`,
+ 1 AS `postal_code`,
+ 1 AS `country_name`*/;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Dumping events for database 'fooddelivery'
+--
+
+--
+-- Dumping routines for database 'fooddelivery'
+--
+/*!50003 DROP PROCEDURE IF EXISTS `get_customer_details` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_customer_details`(IN p_customer_id INT, OUT p_id INT, OUT p_first_name VARCHAR(255), OUT p_last_name VARCHAR(255))
+BEGIN
+    SELECT id, first_name, last_name INTO p_id, p_first_name, p_last_name
+    FROM customer
+    WHERE id = p_customer_id;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `get_menu_items_for_restaurant` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `get_menu_items_for_restaurant`(
+    IN p_restaurant_id INT
+)
+BEGIN
+    SELECT
+        id AS menu_item_id,
+        item_name,
+        price
+    FROM menu_item
+    WHERE restaurant_id = p_restaurant_id;
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+/*!50003 DROP PROCEDURE IF EXISTS `InsertFoodOrder` */;
+/*!50003 SET @saved_cs_client      = @@character_set_client */ ;
+/*!50003 SET @saved_cs_results     = @@character_set_results */ ;
+/*!50003 SET @saved_col_connection = @@collation_connection */ ;
+/*!50003 SET character_set_client  = utf8mb4 */ ;
+/*!50003 SET character_set_results = utf8mb4 */ ;
+/*!50003 SET collation_connection  = utf8mb4_0900_ai_ci */ ;
+/*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
+/*!50003 SET sql_mode              = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION' */ ;
+DELIMITER ;;
+CREATE DEFINER=`root`@`localhost` PROCEDURE `InsertFoodOrder`(
+    IN p_customer_name VARCHAR(255),
+    IN p_restaurant_name VARCHAR(255),
+    IN p_customer_address VARCHAR(255),
+    IN p_order_status_name VARCHAR(255),
+    IN p_assigned_driver_name VARCHAR(255),
+    IN p_order_datetime DATETIME,
+    IN p_delivery_fee DECIMAL(10, 2),
+    IN p_total_amount DECIMAL(10, 2),
+    IN p_requested_delivery_datetime DATETIME
+)
+BEGIN
+    DECLARE v_customer_id INT;
+    DECLARE v_restaurant_id INT;
+    DECLARE v_customer_address_id INT;
+    DECLARE v_order_status_id INT;
+    DECLARE v_assigned_driver_id INT;
+
+    -- Get the customer ID
+    SELECT id INTO v_customer_id FROM customer WHERE customer_name = p_customer_name;
+
+    -- Get the restaurant ID
+    SELECT id INTO v_restaurant_id FROM restaurant WHERE restaurant_name = p_restaurant_name;
+
+    -- Get the customer address ID
+    SELECT id INTO v_customer_address_id FROM customer_address WHERE address = p_customer_address;
+
+    -- Get the order status ID
+    SELECT id INTO v_order_status_id FROM order_status WHERE status_name = p_order_status_name;
+
+    -- Get the assigned driver ID
+    SELECT id INTO v_assigned_driver_id FROM delivery_driver WHERE driver_name = p_assigned_driver_name;
+
+    -- Insert into food_order using the obtained IDs
+    INSERT INTO food_order (
+        customer_id,
+        restaurant_id,
+        customer_address_id,
+        order_status_id,
+        assigned_driver_id,
+        order_datetime,
+        delivery_fee,
+        total_amount,
+        requested_delivery_datetime
+    ) VALUES (
+        v_customer_id,
+        v_restaurant_id,
+        v_customer_address_id,
+        v_order_status_id,
+        v_assigned_driver_id,
+        p_order_datetime,
+        p_delivery_fee,
+        p_total_amount,
+        p_requested_delivery_datetime
+    );
+END ;;
+DELIMITER ;
+/*!50003 SET sql_mode              = @saved_sql_mode */ ;
+/*!50003 SET character_set_client  = @saved_cs_client */ ;
+/*!50003 SET character_set_results = @saved_cs_results */ ;
+/*!50003 SET collation_connection  = @saved_col_connection */ ;
+
+--
+-- Final view structure for view `customer_info`
+--
+
+/*!50001 DROP VIEW IF EXISTS `customer_info`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `customer_info` AS select `customer`.`id` AS `customer_id`,`customer`.`first_name` AS `first_name`,`customer`.`last_name` AS `last_name` from `customer` */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `customer_order_info`
+--
+
+/*!50001 DROP VIEW IF EXISTS `customer_order_info`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `customer_order_info` AS select `fo`.`id` AS `order_id`,`c`.`first_name` AS `customer_first_name`,`c`.`last_name` AS `customer_last_name`,`r`.`restaurant_name` AS `restaurant_name`,`mi`.`item_name` AS `ordered_item`,`om`.`qty_ordered` AS `qty_ordered`,`mi`.`price` AS `price`,(`om`.`qty_ordered` * `mi`.`price`) AS `item_total`,`fo`.`total_amount` AS `total_amount`,`fo`.`order_datetime` AS `order_datetime` from ((((`food_order` `fo` join `customer` `c` on((`fo`.`customer_id` = `c`.`id`))) join `restaurant` `r` on((`fo`.`restaurant_id` = `r`.`id`))) join `order_menu_item` `om` on((`fo`.`id` = `om`.`order_id`))) join `menu_item` `mi` on((`om`.`menu_item_id` = `mi`.`id`))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+
+--
+-- Final view structure for view `restaurant_info`
+--
+
+/*!50001 DROP VIEW IF EXISTS `restaurant_info`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8mb4 */;
+/*!50001 SET character_set_results     = utf8mb4 */;
+/*!50001 SET collation_connection      = utf8mb4_0900_ai_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `restaurant_info` AS select `r`.`id` AS `restaurant_id`,`r`.`restaurant_name` AS `restaurant_name`,`a`.`unit_number` AS `unit_number`,`a`.`street_number` AS `street_number`,`a`.`address_line1` AS `address_line1`,`a`.`address_line2` AS `address_line2`,`a`.`city` AS `city`,`a`.`region` AS `region`,`a`.`postal_code` AS `postal_code`,`c`.`country_name` AS `country_name` from ((`restaurant` `r` join `address` `a` on((`r`.`address_id` = `a`.`id`))) join `country` `c` on((`a`.`country_id` = `c`.`id`))) */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2023-12-16 10:06:47
